@@ -35,5 +35,14 @@ void server::readFromConnection()
 
     std::cout << "Received tcp message: " << QString(buffer).toStdString() << std::endl;//print tcp message with cout
 
+    //send dbus signal if tcp message contains task
+    if (QString(buffer).mid(0, 9) == "playPause") {
+        system("dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause");
+    } else if (QString(buffer).mid(0, 4) == "next") {
+        system("dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next");
+    } else if (QString(buffer).mid(0, 8) == "previous") {
+        system("dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous");
+    }
+
     tcpClient->close();//close the tcp connection to client
 }
