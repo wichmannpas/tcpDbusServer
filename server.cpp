@@ -37,7 +37,7 @@ void server::readFromConnection()
 
     //split received tcp signal at iterator ::: to be able to receive multiple information from one single string
     //data format should end with ::: to avoid incorrect parses i.e. of blank spaces
-    QStringList tcpData = QString(buffer).split(":::");
+    QStringList tcpData = QString(buffer).remove("&").remove("|").split(":::");
 
     //check tcp signal for validity
     if (tcpData.count() >= 2) {//exactly two fragments needed; accepting more because of blank spaces/lines at the end of string can be counted as third
