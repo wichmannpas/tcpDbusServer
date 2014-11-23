@@ -35,13 +35,21 @@ void server::readFromConnection()
 
     std::cout << "Received tcp message: " << QString(buffer).toStdString() << std::endl;//print tcp message with cout
 
-    //send dbus signal if tcp message contains task
-    if (QString(buffer).mid(0, 9) == "playPause") {
-        system("dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause");
-    } else if (QString(buffer).mid(0, 4) == "next") {
-        system("dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next");
-    } else if (QString(buffer).mid(0, 8) == "previous") {
-        system("dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous");
+    //split received tcp signal at iterator ::: to be able to receive multiple information from one single string
+    //data format should end with ::: to avoid incorrect parses i.e. of blank spaces
+    QStringList tcpData = QString(buffer).split(":::");
+
+    //check tcp signal for validity
+    if (tcpData.count() >= 2) {//exactly two fragments needed; accepting more because of blank spaces/lines at the end of string can be counted as third
+        //generate dbus command
+        char command[256];
+        strcpy(command, "dbus-send --print-reply --dest=org.mpris.MediaPlayer2.");
+        strcat(command, tcpData.at(1).toUtf8().constData());//target (i.e. rhythmbox, spotify, vlc)
+        strcat(command, " /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.");
+        strcat(command, tcpData.at(0).toUtf8().constData());//action (i.e. PlayPause)
+
+        //send command to system
+        system(command);
     }
 
     tcpClient->close();//close the tcp connection to client
