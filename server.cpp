@@ -40,7 +40,18 @@ void server::readFromConnection()
     QStringList tcpData = QString(buffer).remove("&").remove("|").split(":::");
 
     //check tcp signal for validity
-    if (tcpData.count() >= 2) {//exactly two fragments needed; accepting more because of blank spaces/lines at the end of string can be counted as third
+    if (tcpData.count() >= 2 && tcpData.at(0) == "volume") {//volume alsa action - exactly two fragments needed; accepting more because of blank spaces/lines at the end of string can be counted as third
+        if (tcpData.at(1) == "up") {
+            //send volume up command
+            system("amixer -D pulse sset Master 10%+");
+        } else if (tcpData.at(1) == "down") {
+            //send volume down command
+            system("amixer -D pulse sset Master 10%-");
+        } else {
+            //restore 100%
+            system("amixer -D pulse sset Master 100%");
+        }
+    } else if (tcpData.count() >= 2) {//dbus actions, if none of the above was found - exactly two fragments needed; accepting more because of blank spaces/lines at the end of string can be counted as third
         //generate dbus command
         char command[256];
         strcpy(command, "dbus-send --print-reply --dest=org.mpris.MediaPlayer2.");

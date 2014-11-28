@@ -3,7 +3,13 @@ TCP DBus Server
 
 **Attention!** *You are currently viewing the unstable development branch. Using this source code can cause compatibility issues when used with the tcpDbusClient Android application.*
 
-This is a dbus tcp server script receiving tcp connections and sending the appropriate dbus signal to give remote media key (i.e. for Android) functionality.
+This is a dbus tcp server script receiving tcp connections and sending the appropriate system signal to give remote media key (i.e. for Android) functionality.
+
+Features currently supported:
+
+* play/pause
+* previous/next
+* volume control
 
 See [tcpDbusClient](http://github.com/wichmannpas/tcpDbusClient) for a basic Android app communicating with this server script.
 
@@ -25,7 +31,8 @@ To use this script you will need:
 
 * dbus installed and working on your system
 * GNU Compiler
-* Qt>=4
+* Qt
+* alsa-utils (for using volume control features)
 
 To compile, switch to the directory where you have downloaded the source code and type in the following:
 
@@ -34,12 +41,12 @@ To compile, switch to the directory where you have downloaded the source code an
 
 Make sure that the compiled script is started with the user session (i.e. put it in the startup applications of your desktop manager - **not** on system level, because the dbus signals will not be received correctly then).
 
-Using for different sound applications
+Customizing
 --------------------------------------
 
-By default, this script only sends the dbus signals to the Spotify Linux Preview. To use any other application with it (see compatibility section), change the dbus system commands in the source file *server.cpp*. Normally it should be enough to just replace *spotify* by the name of your music application, i.e. *rhthmboy*.
+You can change the port where the tcp server is listening. Default is *12341*.
 
-Of course, you can also change the port where the tcp server is listening. Default is *12341*.
+All other data can be dynamically sent in the tcp data, i.e. the target dbus application.
 
 License
 -------
