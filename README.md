@@ -1,7 +1,7 @@
 TCP DBus Server
 ===============
 
-**Attention!** *You are currently viewing the unstable development branch. Using this source code can cause compatibility issues when used with the tcpDbusClient Android application. See *stable* branch for stable releases.*
+**Attention!** *You are currently viewing the unstable development branch. Using this source code can cause compatibility issues when used with the tcpDbusClient Android application. See stable branch for stable releases.*
 
 This is a dbus tcp server script receiving tcp connections and sending the appropriate system signal to give remote media key (i.e. for Android) functionality.
 
